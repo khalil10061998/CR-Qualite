@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Générateur de CR - Pôle Qualité</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📝 Générateur de Compte Rendu</h1>
+
+<label for="action">Quelle action as-tu menée ?</label>
+<textarea id="action" rows="3"></textarea>
+
+<label for="perimetre">Quel périmètre est concerné ?</label>
+<input type="text" id="perimetre">
+
+<label for="equipe">Quelle équipe est concernée ?</label>
+<input type="text" id="equipe">
+
+<label for="resultat">Quel est le résultat ?</label>
+<textarea id="resultat" rows="3"></textarea>
+
+<label for="suivi">Y a-t-il un suivi à prévoir ?</label>
+<textarea id="suivi" rows="2"></textarea>
+
+<label for="auteur">Ton prénom</label>
+<input type="text" id="auteur">
+
+<button class="btn" onclick="genererCR()">Générer le CR</button>
+<button class="btn" onclick="copierTexte()">📋 Copier</button>
+<button class="btn" onclick="telechargerTxt()">📥 Télécharger</button>
+
+<div id="output" class="card" style="display:none;"></div>
+
+<script>
+  let texteFinal = "";
+
+  function genererCR() {
+    const action = document.getElementById("action").value;
+    const perimetre = document.getElementById("perimetre").value;
+    const equipe = document.getElementById("equipe").value;
+    const resultat = document.getElementById("resultat").value;
+    const suivi = document.getElementById("suivi").value;
+    const auteur = document.getElementById("auteur").value;
+
+    texteFinal = `📝 COMPTE RENDU – Pôle Qualité
+
+🔹 Action réalisée : ${action}
+🔹 Périmètre concerné : ${perimetre}
+🔹 Équipe concernée : ${equipe}
+🔹 Résultat obtenu : ${resultat}
+🔹 Suivi / Prochaine étape : ${suivi}
+
+📅 Rédigé par : ${auteur}
+`;
+
+    const output = document.getElementById("output");
+    output.textContent = texteFinal;
+    output.style.display = "block";
+  }
+
+  function copierTexte() {
+    if (!texteFinal) return;
+    navigator.clipboard.writeText(texteFinal).then(() => {
+      alert("Le compte rendu a été copié !");
+    });
+  }
+
+  function telechargerTxt() {
+    if (!texteFinal) return;
+    const blob = new Blob([texteFinal], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "compte_rendu.txt";
+    link.click();
+  }
+</script>
+
+</body>
+</html>
+
