@@ -140,7 +140,7 @@
     }
 
     async function telechargerPDF() {
-      const {{ jsPDF }} = window.jspdf;
+      const jsPDF = window.jspdf.jsPDF;
       const doc = new jsPDF();
       doc.setFontSize(12);
       const lines = doc.splitTextToSize(texteFinal, 180);
@@ -150,4 +150,5 @@
   </script>
 </body>
 </html>
+
 
