@@ -1,11 +1,23 @@
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CR Qualité - Free PRO</title>
+
+  <!-- Icône + Manifest pour installation -->
   <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("✅ Service worker installé"))
+        .catch((e) => console.error("Erreur service worker:", e));
+    }
+  </script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
