@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Générateur de CR - Pôle Qualité V2</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f7f7f7;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #d10000; /* Rouge Free */
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #d10000; /* Rouge Free */
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #a80000;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🚀 COMPTE RENDU – Pôle Qualité – V2</h1>
+<div class="subtitle">Générateur automatique aux couleurs de Free 🔴</div>
+
+<label for="action">Quelle action as-tu menée ?</label>
+<textarea id="action" rows="3"></textarea>
+
+<label for="perimetre">Quel périmètre est concerné ?</label>
+<input type="text" id="perimetre">
+
+<label for="equipe">Quelle équipe est concernée ?</label>
+<input type="text" id="equipe">
+
+<label for="resultat">Quel est le résultat ?</label>
+<textarea id="resultat" rows="3"></textarea>
+
+<label for="suivi">Y a-t-il un suivi à prévoir ?</label>
+<textarea id="suivi" rows="2"></textarea>
+
+<label for="auteur">Ton prénom</label>
+<input type="text" id="auteur">
+
+<button class="btn" onclick="genererCR()">Générer le CR</button>
+<button class="btn" onclick="copierTexte()">📋 Copier</button>
+<button class="btn" onclick="telechargerTxt()">📥 Télécharger</button>
+
+<div id="output" class="card" style="display:none;"></div>
+
+<script>
+  let texteFinal = "";
+
+  function genererCR() {
+    const action = document.getElementById("action").value;
+    const perimetre = document.getElementById("perimetre").value;
+    const equipe = document.getElementById("equipe").value;
+    const resultat = document.getElementById("resultat").value;
+    const suivi = document.getElementById("suivi").value;
+    const auteur = document.getElementById("auteur").value;
+
+    texteFinal = `🚀 COMPTE RENDU – Pôle Qualité – V2
+
+🔹 Action réalisée : ${action}
+🔹 Périmètre concerné : ${perimetre}
+🔹 Équipe concernée : ${equipe}
+🔹 Résultat obtenu : ${resultat}
+🔹 Suivi / Prochaine étape : ${suivi}
+
+📅 Rédigé par : ${auteur}
+`;
+
+    const output = document.getElementById("output");
+    output.textContent = texteFinal;
+    output.style.display = "block";
+  }
+
+  function copierTexte() {
+    if (!texteFinal) return;
+    navigator.clipboard.writeText(texteFinal).then(() => {
+      alert("Le compte rendu a été copié !");
+    });
+  }
+
+  function telechargerTxt() {
+    if (!texteFinal) return;
+    const blob = new Blob([texteFinal], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "compte_rendu.txt";
+    link.click();
+  }
+</script>
+
+</body>
+</html>
