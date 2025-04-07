@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CR Qualité - Free PRO</title>
-
-  <!-- Icône + Manifest pour installation -->
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
-
-  <!-- Service worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -17,7 +13,6 @@
         .catch((e) => console.error("Erreur service worker:", e));
     }
   </script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -76,9 +71,36 @@
       border-radius: 10px;
       white-space: pre-wrap;
     }
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #d10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #splash-screen img {
+      width: 80%;
+      max-width: 600px;
+      animation: fadeOut 1s ease-in-out 2.5s forwards;
+    }
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
   </style>
 </head>
 <body>
+  <div id="splash-screen">
+    <img src="splash.png" alt="Splash Screen" />
+  </div>
+
   <header>
     <img src="logo.png" alt="Free PRO" />
     <h1>🚀 CR Qualité – V3</h1>
@@ -160,8 +182,12 @@
       doc.text(lines, 15, 20);
       doc.save("compte_rendu.pdf");
     }
+
+    // Supprimer le splash screen après 3s
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.remove();
+    }, 3000);
   </script>
 </body>
 </html>
-
-
