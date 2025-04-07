@@ -2,138 +2,152 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Générateur de CR - Pôle Qualité V2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CR Qualité - Free PRO</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
+      font-family: Arial, sans-serif;
       background-color: #f7f7f7;
-      padding: 30px;
-      max-width: 900px;
-      margin: auto;
+      margin: 0;
+      padding: 0 20px;
     }
-    h1 {
+    header {
+      background-color: #d10000;
+      padding: 20px;
+      color: white;
       text-align: center;
-      color: #d10000; /* Rouge Free */
+    }
+    header img {
+      height: 50px;
       margin-bottom: 10px;
     }
-    .subtitle {
-      text-align: center;
-      font-size: 18px;
-      color: #555;
-      margin-bottom: 30px;
+    h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 20px;
       font-weight: bold;
-      color: #333;
     }
-    textarea, input {
+    input, textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      border-radius: 6px;
       border: 1px solid #ccc;
+      border-radius: 5px;
       font-size: 14px;
     }
-    .btn {
+    button {
       margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #d10000; /* Rouge Free */
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
       margin-right: 10px;
-      transition: background 0.2s ease;
-    }
-    .btn:hover {
-      background-color: #a80000;
+      padding: 10px 20px;
+      background-color: #d10000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
     .card {
-      background: white;
+      background: #f4f4f4;
       padding: 20px;
-      border-radius: 12px;
       margin-top: 30px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
       white-space: pre-wrap;
-      font-family: monospace;
     }
   </style>
 </head>
 <body>
+  <header>
+    <img src="logo.png" alt="Free PRO">
+    <h1>🚀 CR Qualité – V3</h1>
+  </header>
 
-<h1>🚀 COMPTE RENDU – Pôle Qualité – V2</h1>
-<div class="subtitle">Générateur automatique aux couleurs de Free 🔴</div>
+  <div class="container">
+    <label for="action">Quelle action as-tu menée ?</label>
+    <textarea id="action"></textarea>
 
-<label for="action">Quelle action as-tu menée ?</label>
-<textarea id="action" rows="3"></textarea>
+    <label for="perimetre">Quel périmètre est concerné ?</label>
+    <input type="text" id="perimetre">
 
-<label for="perimetre">Quel périmètre est concerné ?</label>
-<input type="text" id="perimetre">
+    <label for="equipe">Quelle équipe est concernée ?</label>
+    <input type="text" id="equipe">
 
-<label for="equipe">Quelle équipe est concernée ?</label>
-<input type="text" id="equipe">
+    <label for="resultat">Quel est le résultat ?</label>
+    <textarea id="resultat"></textarea>
 
-<label for="resultat">Quel est le résultat ?</label>
-<textarea id="resultat" rows="3"></textarea>
+    <label for="suivi">Y a-t-il un suivi à prévoir ?</label>
+    <textarea id="suivi"></textarea>
 
-<label for="suivi">Y a-t-il un suivi à prévoir ?</label>
-<textarea id="suivi" rows="2"></textarea>
+    <label for="auteur">Ton prénom</label>
+    <input type="text" id="auteur">
 
-<label for="auteur">Ton prénom</label>
-<input type="text" id="auteur">
+    <button onclick="genererCR()">Générer le CR</button>
+    <button onclick="copierTexte()">📋 Copier</button>
+    <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
+    <button onclick="telechargerPDF()">📄 Télécharger PDF</button>
 
-<button class="btn" onclick="genererCR()">Générer le CR</button>
-<button class="btn" onclick="copierTexte()">📋 Copier</button>
-<button class="btn" onclick="telechargerTxt()">📥 Télécharger</button>
+    <div id="output" class="card" style="display:none;"></div>
+  </div>
 
-<div id="output" class="card" style="display:none;"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    let texteFinal = "";
 
-<script>
-  let texteFinal = "";
+    function genererCR() {
+      const action = document.getElementById("action").value;
+      const perimetre = document.getElementById("perimetre").value;
+      const equipe = document.getElementById("equipe").value;
+      const resultat = document.getElementById("resultat").value;
+      const suivi = document.getElementById("suivi").value;
+      const auteur = document.getElementById("auteur").value;
 
-  function genererCR() {
-    const action = document.getElementById("action").value;
-    const perimetre = document.getElementById("perimetre").value;
-    const equipe = document.getElementById("equipe").value;
-    const resultat = document.getElementById("resultat").value;
-    const suivi = document.getElementById("suivi").value;
-    const auteur = document.getElementById("auteur").value;
+      texteFinal = `🚀 COMPTE RENDU – Pôle Qualité – V3\n\n` +
+        `🔹 Action réalisée : ${action}\n` +
+        `🔹 Périmètre concerné : ${perimetre}\n` +
+        `🔹 Équipe concernée : ${equipe}\n` +
+        `🔹 Résultat obtenu : ${resultat}\n` +
+        `🔹 Suivi / Prochaine étape : ${suivi}\n\n` +
+        `📅 Rédigé par : ${auteur}`;
 
-    texteFinal = `🚀 COMPTE RENDU – Pôle Qualité – V2
+      const output = document.getElementById("output");
+      output.textContent = texteFinal;
+      output.style.display = "block";
+    }
 
-🔹 Action réalisée : ${action}
-🔹 Périmètre concerné : ${perimetre}
-🔹 Équipe concernée : ${equipe}
-🔹 Résultat obtenu : ${resultat}
-🔹 Suivi / Prochaine étape : ${suivi}
+    function copierTexte() {
+      if (!texteFinal) return;
+      navigator.clipboard.writeText(texteFinal).then(() => {
+        alert("Le compte rendu a été copié !");
+      });
+    }
 
-📅 Rédigé par : ${auteur}
-`;
+    function telechargerTxt() {
+      if (!texteFinal) return;
+      const blob = new Blob([texteFinal], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "compte_rendu.txt";
+      link.click();
+    }
 
-    const output = document.getElementById("output");
-    output.textContent = texteFinal;
-    output.style.display = "block";
-  }
-
-  function copierTexte() {
-    if (!texteFinal) return;
-    navigator.clipboard.writeText(texteFinal).then(() => {
-      alert("Le compte rendu a été copié !");
-    });
-  }
-
-  function telechargerTxt() {
-    if (!texteFinal) return;
-    const blob = new Blob([texteFinal], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "compte_rendu.txt";
-    link.click();
-  }
-</script>
-
+    async function telechargerPDF() {
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      const lines = doc.splitTextToSize(texteFinal, 180);
+      doc.text(lines, 15, 20);
+      doc.save("compte_rendu.pdf");
+    }
+  </script>
 </body>
 </html>
+
