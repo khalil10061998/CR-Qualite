@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CR Qualité - Free PRO</title>
+  <title>QRQC – Anomalie</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
   <style>
@@ -29,6 +29,11 @@
     h1 {
       margin: 0;
       animation: fadeIn 2s ease-in-out;
+    }
+    .splash-animation {
+      margin-top: 10px;
+      animation: fadeIn 3s ease-in-out;
+      width: 120px;
     }
     @keyframes slideIn {
       0% { transform: translateY(-100px); opacity: 0; }
@@ -81,7 +86,8 @@
 <body>
   <header>
     <img src="logo.png" alt="Free PRO" class="logo" />
-    <h1>🚀 CR Qualité – QRQC</h1>
+    <h1>🚀 QRQC – Anomalie</h1>
+    <img src="splash.png" alt="Animation Free Pro" class="splash-animation">
   </header>
 
   <div class="container">
@@ -111,9 +117,6 @@
       <option value="Élevée">Élevée</option>
     </select>
 
-    <label for="responsable">Responsable désigné</label>
-    <input type="text" id="responsable" />
-
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
     <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
@@ -132,7 +135,6 @@
       const cause = document.getElementById("cause").value;
       const urgence = document.getElementById("urgence").value;
       const priorite = document.getElementById("priorite").value;
-      const responsable = document.getElementById("responsable").value;
 
       texteFinal = `📝 Fiche QRQC\n\n` +
         `📅 Date : ${date}\n` +
@@ -141,8 +143,7 @@
         `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
         `🧠 Cause racine possible :\n${cause}\n\n` +
         `🔥 Urgence : ${urgence} / 5\n` +
-        `🚦 Priorité : ${priorite}\n` +
-        `👨‍🔧 Responsable : ${responsable}`;
+        `🚦 Priorité : ${priorite}`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
