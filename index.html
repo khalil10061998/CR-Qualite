@@ -46,7 +46,7 @@
       margin-top: 20px;
       font-weight: bold;
     }
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -80,20 +80,34 @@
   </header>
 
   <div class="container">
-    <label for="date">Date :</label>
+    <label for="date">Date</label>
     <input type="date" id="date" />
 
-    <label for="nom">Nom :</label>
+    <label for="nom">Nom (Qui)</label>
     <input type="text" id="nom" />
 
-    <label for="jfp">JFP Client :</label>
+    <label for="jfp">JFP Client</label>
     <input type="text" id="jfp" />
 
-    <label for="ecart">Écart factuel constaté :</label>
+    <label for="ecart">Écart factuel constaté</label>
     <textarea id="ecart"></textarea>
 
-    <label for="cause">Cause racine possible :</label>
+    <label for="cause">Cause racine possible</label>
     <textarea id="cause"></textarea>
+
+    <label for="urgence">Urgence (1 à 5)</label>
+    <input type="range" id="urgence" min="1" max="5" value="3" oninput="document.getElementById('urgence-val').innerText = this.value">
+    <p>Valeur sélectionnée : <strong id="urgence-val">3</strong></p>
+
+    <label for="priorite">Priorité</label>
+    <select id="priorite">
+      <option value="Faible">Faible</option>
+      <option value="Moyenne">Moyenne</option>
+      <option value="Élevée">Élevée</option>
+    </select>
+
+    <label for="responsable">Responsable désigné</label>
+    <input type="text" id="responsable" />
 
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
@@ -111,13 +125,19 @@
       const jfp = document.getElementById("jfp").value;
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
+      const urgence = document.getElementById("urgence").value;
+      const priorite = document.getElementById("priorite").value;
+      const responsable = document.getElementById("responsable").value;
 
       texteFinal = `📝 Fiche QRQC\n\n` +
         `📅 Date : ${date}\n` +
         `👤 Nom : ${nom}\n` +
         `🧾 JFP Client : ${jfp}\n` +
         `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
-        `🧠 Cause racine possible :\n${cause}`;
+        `🧠 Cause racine possible :\n${cause}\n\n` +
+        `🔥 Urgence : ${urgence} / 5\n` +
+        `🚦 Priorité : ${priorite}\n` +
+        `👨‍🔧 Responsable : ${responsable}`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
@@ -136,7 +156,7 @@
       const blob = new Blob([texteFinal], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "qrqc.txt";
+      link.download = "fiche_qrqc.txt";
       link.click();
     }
   </script>
