@@ -54,18 +54,35 @@
       border-radius: 5px;
       font-size: 14px;
     }
+    .urgency-block {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .urgency-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
     .urgency-slider {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 5px;
     }
     .urgency-slider input[type=range] {
       flex-grow: 1;
     }
+    .urgency-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 0 10px;
+    }
     .urgency-value {
       font-weight: bold;
       min-width: 30px;
+      text-align: right;
     }
     .priority-buttons {
       display: flex;
@@ -116,12 +133,21 @@
     <label for="cause">Cause racine possible :</label>
     <textarea id="cause"></textarea>
 
-    <label for="urgence">Urgence (1 = faible / 5 = critique) :</label>
-    <div class="urgency-slider">
-      <span>1</span>
-      <input type="range" id="urgence" min="1" max="5" value="3" oninput="updateUrgenceValue(this.value)">
-      <span>5</span>
-      <span class="urgency-value" id="urgence-val">3</span>
+    <div class="urgency-block">
+      <div class="urgency-header">
+        <label for="urgence">Urgence :</label>
+        <span class="urgency-value" id="urgence-val">3</span>
+      </div>
+      <div class="urgency-slider">
+        <input type="range" id="urgence" min="1" max="5" value="3" oninput="updateUrgenceValue(this.value)">
+      </div>
+      <div class="urgency-values">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+        <span>4</span>
+        <span>5</span>
+      </div>
     </div>
 
     <label>Priorité :</label>
