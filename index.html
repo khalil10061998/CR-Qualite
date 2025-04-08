@@ -6,13 +6,6 @@
   <title>CR Qualité - Free PRO</title>
   <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("✅ Service worker installé"))
-        .catch((e) => console.error("Erreur service worker:", e));
-    }
-  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -25,13 +18,25 @@
       padding: 20px;
       color: white;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    header img {
+    header img.logo {
       height: 50px;
       margin-bottom: 10px;
+      animation: slideIn 1.5s ease-in-out;
     }
     h1 {
       margin: 0;
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes slideIn {
+      0% { transform: translateY(-100px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
     .container {
       max-width: 900px;
@@ -46,7 +51,7 @@
       margin-top: 20px;
       font-weight: bold;
     }
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -75,7 +80,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="Free PRO" />
+    <img src="logo.png" alt="Free PRO" class="logo" />
     <h1>🚀 CR Qualité – QRQC</h1>
   </header>
 
