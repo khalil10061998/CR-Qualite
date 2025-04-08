@@ -54,10 +54,14 @@
       border-radius: 5px;
       font-size: 14px;
     }
-    .urgency-scale {
+    .urgency-slider {
       display: flex;
+      align-items: center;
       gap: 10px;
       margin-top: 10px;
+    }
+    .urgency-slider input[type=range] {
+      flex-grow: 1;
     }
     .priority-buttons {
       display: flex;
@@ -109,12 +113,10 @@
     <textarea id="cause"></textarea>
 
     <label for="urgence">Urgence (1 = faible / 5 = critique) :</label>
-    <div class="urgency-scale">
-      <label><input type="radio" name="urgence" value="1"> 1</label>
-      <label><input type="radio" name="urgence" value="2"> 2</label>
-      <label><input type="radio" name="urgence" value="3"> 3</label>
-      <label><input type="radio" name="urgence" value="4"> 4</label>
-      <label><input type="radio" name="urgence" value="5"> 5</label>
+    <div class="urgency-slider">
+      <span>1</span>
+      <input type="range" id="urgence" min="1" max="5" value="3">
+      <span>5</span>
     </div>
 
     <label>Priorité :</label>
@@ -149,8 +151,7 @@
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
       const responsable = document.getElementById("responsable").value;
-
-      const urgence = document.querySelector('input[name="urgence"]:checked')?.value || "-";
+      const urgence = document.getElementById("urgence").value;
 
       texteFinal = `📝 Fiche Anomalie\n\n` +
         `📅 Date : ${date}\n` +
