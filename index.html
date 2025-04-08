@@ -46,13 +46,26 @@
       margin-top: 20px;
       font-weight: bold;
     }
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 14px;
+    }
+    .urgency-scale {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .priority-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .priority-buttons button {
+      flex: 1;
     }
     button {
       margin-top: 20px;
@@ -71,87 +84,83 @@
       border-radius: 10px;
       white-space: pre-wrap;
     }
-    #splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #d10000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    #splash-screen img {
-      width: 80%;
-      max-width: 600px;
-      animation: fadeOut 1s ease-in-out 2.5s forwards;
-    }
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
   </style>
 </head>
 <body>
-  <div id="splash-screen">
-    <img src="splash.png" alt="Splash Screen" />
-  </div>
-
   <header>
     <img src="logo.png" alt="Free PRO" />
-    <h1>🚀 CR Qualité – V3</h1>
+    <h1>🚀 CR Qualité – Anomalie</h1>
   </header>
 
   <div class="container">
-    <label for="action">Quelle action as-tu menée ?</label>
-    <textarea id="action"></textarea>
+    <label for="date">Date :</label>
+    <input type="date" id="date" />
 
-    <label for="perimetre">Quel périmètre est concerné ?</label>
-    <input type="text" id="perimetre" />
-
-    <label for="equipe">Quelle équipe est concernée ?</label>
-    <input type="text" id="equipe" />
-
-    <label for="resultat">Quel est le résultat ?</label>
-    <textarea id="resultat"></textarea>
-
-    <label for="suivi">Y a-t-il un suivi à prévoir ?</label>
-    <textarea id="suivi"></textarea>
-
-    <label for="auteur">Ton prénom</label>
+    <label for="auteur">Qui :</label>
     <input type="text" id="auteur" />
+
+    <label for="jfp">JFP Client :</label>
+    <input type="text" id="jfp" />
+
+    <label for="ecart">Écart factuel constaté :</label>
+    <textarea id="ecart"></textarea>
+
+    <label for="cause">Cause racine possible :</label>
+    <textarea id="cause"></textarea>
+
+    <label for="urgence">Urgence (1 = faible / 5 = critique) :</label>
+    <div class="urgency-scale">
+      <label><input type="radio" name="urgence" value="1"> 1</label>
+      <label><input type="radio" name="urgence" value="2"> 2</label>
+      <label><input type="radio" name="urgence" value="3"> 3</label>
+      <label><input type="radio" name="urgence" value="4"> 4</label>
+      <label><input type="radio" name="urgence" value="5"> 5</label>
+    </div>
+
+    <label>Priorité :</label>
+    <div class="priority-buttons">
+      <button type="button" onclick="setPriority('Faible')">Faible</button>
+      <button type="button" onclick="setPriority('Moyenne')">Moyenne</button>
+      <button type="button" onclick="setPriority('Élevée')">Élevée</button>
+    </div>
+
+    <label for="responsable">Responsable :</label>
+    <input type="text" id="responsable" />
 
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
     <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
-    <button onclick="telechargerPDF()">📄 Télécharger PDF</button>
 
     <div id="output" class="card" style="display:none;"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     let texteFinal = "";
+    let priorite = "";
+
+    function setPriority(val) {
+      priorite = val;
+    }
 
     function genererCR() {
-      const action = document.getElementById("action").value;
-      const perimetre = document.getElementById("perimetre").value;
-      const equipe = document.getElementById("equipe").value;
-      const resultat = document.getElementById("resultat").value;
-      const suivi = document.getElementById("suivi").value;
+      const date = document.getElementById("date").value;
       const auteur = document.getElementById("auteur").value;
+      const jfp = document.getElementById("jfp").value;
+      const ecart = document.getElementById("ecart").value;
+      const cause = document.getElementById("cause").value;
+      const responsable = document.getElementById("responsable").value;
 
-      texteFinal = `🚀 COMPTE RENDU – Pôle Qualité – V3\n\n` +
-        `🔹 Action réalisée : ${action}\n` +
-        `🔹 Périmètre concerné : ${perimetre}\n` +
-        `🔹 Équipe concernée : ${equipe}\n` +
-        `🔹 Résultat obtenu : ${resultat}\n` +
-        `🔹 Suivi / Prochaine étape : ${suivi}\n\n` +
-        `📅 Rédigé par : ${auteur}`;
+      const urgence = document.querySelector('input[name="urgence"]:checked')?.value || "-";
+
+      texteFinal = `📝 Fiche Anomalie\n\n` +
+        `📅 Date : ${date}\n` +
+        `👤 Qui : ${auteur}\n` +
+        `🧾 JFP Client : ${jfp}\n` +
+        `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
+        `🧠 Cause racine possible :\n${cause}\n\n` +
+        `🔥 Urgence : ${urgence} / 5\n` +
+        `🚦 Priorité : ${priorite}\n` +
+        `👨‍🔧 Responsable : ${responsable}`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
@@ -170,24 +179,10 @@
       const blob = new Blob([texteFinal], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "compte_rendu.txt";
+      link.download = "fiche_anomalie.txt";
       link.click();
     }
-
-    async function telechargerPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(12);
-      const lines = doc.splitTextToSize(texteFinal, 180);
-      doc.text(lines, 15, 20);
-      doc.save("compte_rendu.pdf");
-    }
-
-    // Supprimer le splash screen après 3s
-    setTimeout(() => {
-      const splash = document.getElementById('splash-screen');
-      if (splash) splash.remove();
-    }, 3000);
   </script>
 </body>
 </html>
+
