@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QRQC – Anomalie</title>
-  <link rel="icon" href="logo.png" type="image/png" />
   <link rel="manifest" href="manifest.json" />
   <style>
     body {
@@ -14,7 +13,7 @@
       background-color: #f7f7f7;
     }
 
-    /* SPLASH FULLSCREEN */
+    /* Splash screen */
     #splash-screen {
       position: fixed;
       top: 0; left: 0;
@@ -36,17 +35,13 @@
       }
     }
 
-    /* HEADER with same splash background */
     header {
-      background-image: url('splash.png');
-      background-size: cover;
-      background-position: center;
+      background-color: #d10000;
       color: white;
       padding: 40px 20px;
       text-align: center;
       position: relative;
     }
-
     .header-kja {
       position: absolute;
       top: 10px;
@@ -54,24 +49,15 @@
       font-size: 12px;
       opacity: 0.3;
     }
-
     .header-title {
       font-size: 2em;
       font-weight: bold;
-      animation: fadeIn 2s ease-in-out;
       margin: 0;
     }
-
     .sub-logo-text {
-      margin-top: 10px;
       font-size: 1.4em;
       font-weight: 600;
-      font-family: Arial, sans-serif;
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
+      margin-top: 10px;
     }
 
     .container {
@@ -82,13 +68,11 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
     label {
       display: block;
       margin-top: 20px;
       font-weight: bold;
     }
-
     input, textarea, select {
       width: 100%;
       padding: 10px;
@@ -97,7 +81,6 @@
       border-radius: 5px;
       font-size: 14px;
     }
-
     button {
       margin-top: 20px;
       margin-right: 10px;
@@ -108,7 +91,6 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     .card {
       background: #f4f4f4;
       padding: 20px;
@@ -120,17 +102,16 @@
 </head>
 <body>
 
-  <!-- SPLASH -->
+  <!-- Splash -->
   <div id="splash-screen"></div>
 
-  <!-- HEADER -->
+  <!-- Header -->
   <header>
     <div class="header-kja">KJA</div>
     <h1 class="header-title">QRQC – Anomalie</h1>
     <div class="sub-logo-text">Free PRO</div>
   </header>
 
-  <!-- FORMULAIRE -->
   <div class="container">
     <label for="date">Date</label>
     <input type="date" id="date" />
@@ -161,12 +142,14 @@
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
     <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
+    <button onclick="telechargerPDFAvecImages()">📄 Télécharger PDF Recto/Verso</button>
+    <button onclick="telechargerPDFPropre()">🧾 Télécharger PDF Propre</button>
 
     <div id="output" class="card" style="display:none;"></div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    // Splash
     setTimeout(() => {
       const splash = document.getElementById('splash-screen');
       if (splash) splash.remove();
@@ -211,6 +194,81 @@
       link.href = URL.createObjectURL(blob);
       link.download = "fiche_qrqc.txt";
       link.click();
+    }
+
+    async function telechargerPDFAvecImages() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const date = document.getElementById("date").value;
+      const nom = document.getElementById("nom").value;
+      const jfp = document.getElementById("jfp").value;
+      const ecart = document.getElementById("ecart").value;
+      const cause = document.getElementById("cause").value;
+
+      const fond1 = await loadImage("fond_recto.png");
+      const fond2 = await loadImage("Image (12).jpeg");
+
+      doc.addImage(fond1, "PNG", 0, 0, 210, 297);
+      doc.setFontSize(12);
+      doc.text(`Date : ${date}`, 25, 38);
+      doc.text(`Qui : ${nom}`, 25, 48);
+      doc.text(`ID Client : ${jfp}`, 25, 58);
+      doc.text(`Écart : ${ecart}`, 25, 70);
+      doc.text(`Cause : ${cause}`, 25, 85);
+
+      doc.addPage();
+      doc.addImage(fond2, "JPEG", 0, 0, 210, 297);
+      doc.text(`Correctif à compléter...`, 25, 70);
+
+      doc.save("QRQC_recto_verso.pdf");
+    }
+
+    async function telechargerPDFPropre() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const date = document.getElementById("date").value;
+      const nom = document.getElementById("nom").value;
+      const jfp = document.getElementById("jfp").value;
+      const ecart = document.getElementById("ecart").value;
+      const cause = document.getElementById("cause").value;
+      const urgence = document.getElementById("urgence").value;
+      const priorite = document.getElementById("priorite").value;
+
+      doc.setFont("Arial");
+      doc.setFontSize(14);
+      doc.setTextColor(200, 0, 0);
+      doc.text("QRQC – Pôle Qualité", 105, 20, { align: "center" });
+
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      let y = 40;
+      doc.text(`Date : ${date}`, 20, y); y += 10;
+      doc.text(`Nom : ${nom}`, 20, y); y += 10;
+      doc.text(`JFP Client : ${jfp}`, 20, y); y += 10;
+      doc.text("Écart factuel constaté :", 20, y); y += 8;
+      doc.text(doc.splitTextToSize(ecart, 170), 25, y); y += 20;
+      doc.text("Cause racine possible :", 20, y); y += 8;
+      doc.text(doc.splitTextToSize(cause, 170), 25, y); y += 20;
+      doc.text(`Urgence : ${urgence} / 5`, 20, y); y += 10;
+      doc.text(`Priorité : ${priorite}`, 20, y);
+
+      doc.save("QRQC_propre.pdf");
+    }
+
+    function loadImage(url) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL("image/png"));
+        };
+        img.src = url;
+      });
     }
   </script>
 </body>
