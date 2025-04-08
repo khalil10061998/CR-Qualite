@@ -54,44 +54,6 @@
       border-radius: 5px;
       font-size: 14px;
     }
-    .urgency-block {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
-    }
-    .urgency-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .urgency-slider {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 5px;
-    }
-    .urgency-slider input[type=range] {
-      flex-grow: 1;
-    }
-    .urgency-values {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      padding: 0 10px;
-    }
-    .urgency-value {
-      font-weight: bold;
-      min-width: 30px;
-      text-align: right;
-    }
-    .priority-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .priority-buttons button {
-      flex: 1;
-    }
     button {
       margin-top: 20px;
       margin-right: 10px;
@@ -114,15 +76,15 @@
 <body>
   <header>
     <img src="logo.png" alt="Free PRO" />
-    <h1>🚀 CR Qualité – Anomalie</h1>
+    <h1>🚀 CR Qualité – QRQC</h1>
   </header>
 
   <div class="container">
     <label for="date">Date :</label>
     <input type="date" id="date" />
 
-    <label for="auteur">Qui :</label>
-    <input type="text" id="auteur" />
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" />
 
     <label for="jfp">JFP Client :</label>
     <input type="text" id="jfp" />
@@ -133,68 +95,29 @@
     <label for="cause">Cause racine possible :</label>
     <textarea id="cause"></textarea>
 
-    <div class="urgency-block">
-      <div class="urgency-header">
-        <label for="urgence">Urgence :</label>
-        <span class="urgency-value" id="urgence-val">3</span>
-      </div>
-      <div class="urgency-slider">
-        <input type="range" id="urgence" min="1" max="5" value="3" oninput="updateUrgenceValue(this.value)">
-      </div>
-      <div class="urgency-values">
-        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-      </div>
-    </div>
-
-    <label>Priorité :</label>
-    <div class="priority-buttons">
-      <button type="button" onclick="setPriority('Faible')">Faible</button>
-      <button type="button" onclick="setPriority('Moyenne')">Moyenne</button>
-      <button type="button" onclick="setPriority('Élevée')">Élevée</button>
-    </div>
-
-    <label for="responsable">Responsable :</label>
-    <input type="text" id="responsable" />
-
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
     <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
-    <button onclick="telechargerPDF()">📄 Télécharger PDF</button>
 
     <div id="output" class="card" style="display:none;"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     let texteFinal = "";
-    let priorite = "";
-
-    function setPriority(val) {
-      priorite = val;
-    }
-
-    function updateUrgenceValue(val) {
-      document.getElementById("urgence-val").textContent = val;
-    }
 
     function genererCR() {
       const date = document.getElementById("date").value;
-      const auteur = document.getElementById("auteur").value;
+      const nom = document.getElementById("nom").value;
       const jfp = document.getElementById("jfp").value;
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
-      const responsable = document.getElementById("responsable").value;
-      const urgence = document.getElementById("urgence").value;
 
-      texteFinal = `📝 Fiche Anomalie\n\n` +
+      texteFinal = `📝 Fiche QRQC\n\n` +
         `📅 Date : ${date}\n` +
-        `👤 Qui : ${auteur}\n` +
+        `👤 Nom : ${nom}\n` +
         `🧾 JFP Client : ${jfp}\n` +
         `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
-        `🧠 Cause racine possible :\n${cause}\n\n` +
-        `🔥 Urgence : ${urgence} / 5\n` +
-        `🚦 Priorité : ${priorite}\n` +
-        `👨‍🔧 Responsable : ${responsable}`;
+        `🧠 Cause racine possible :\n${cause}`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
@@ -213,41 +136,9 @@
       const blob = new Blob([texteFinal], { type: "text/plain" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "fiche_anomalie.txt";
+      link.download = "qrqc.txt";
       link.click();
-    }
-
-    async function telechargerPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-
-      const img = new Image();
-      img.src = "fond_recto.png";
-      img.onload = () => {
-        doc.addImage(img, "PNG", 0, 0, 210, 297);
-
-        doc.setFontSize(10);
-        doc.text(`Date : ${document.getElementById("date").value}`, 25, 38);
-        doc.text(`Qui : ${document.getElementById("auteur").value}`, 25, 48);
-        doc.text(`JFP Client : ${document.getElementById("jfp").value}`, 25, 58);
-
-        const ecart = doc.splitTextToSize(`Écart : ${document.getElementById("ecart").value}`, 160);
-        doc.text(ecart, 25, 70);
-
-        const cause = doc.splitTextToSize(`Cause : ${document.getElementById("cause").value}`, 160);
-        doc.text(cause, 25, 110);
-
-        doc.text(`Urgence : ${document.getElementById("urgence").value}`, 25, 150);
-        doc.text(`Priorité : ${priorite}`, 25, 158);
-        doc.text(`Responsable : ${document.getElementById("responsable").value}`, 25, 166);
-
-        doc.save("fiche_anomalie.pdf");
-      };
     }
   </script>
 </body>
 </html>
-
-
-
-
