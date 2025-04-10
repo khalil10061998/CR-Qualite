@@ -1,275 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QRQC – Anomalie</title>
-  <link rel="manifest" href="manifest.json" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QRQC - Accueil</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0 20px;
+      padding: 0;
+      font-family: Arial, sans-serif;
       background-color: #f7f7f7;
-    }
-
-    /* Splash screen */
-    #splash-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image: url('splash.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      z-index: 9999;
-      animation: fadeOut 1s ease-in-out 2.5s forwards;
-    }
-    @keyframes fadeOut {
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
+      justify-content: center;
+      height: 100vh;
     }
 
     header {
       background-color: #d10000;
       color: white;
-      padding: 40px 20px;
+      width: 100%;
       text-align: center;
-      position: relative;
+      padding: 30px 0;
     }
-    .header-kja {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 12px;
-      opacity: 0.3;
-    }
-    .header-title {
-      font-size: 2em;
-      font-weight: bold;
+
+    h1 {
       margin: 0;
-    }
-    .sub-logo-text {
-      font-size: 1.4em;
-      font-weight: 600;
-      margin-top: 10px;
+      font-size: 2em;
     }
 
     .container {
-      max-width: 900px;
-      margin: 20px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      margin-top: 40px;
     }
-    label {
+
+    .button {
       display: block;
-      margin-top: 20px;
+      width: 250px;
+      margin: 20px auto;
+      padding: 15px;
+      font-size: 18px;
       font-weight: bold;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-    button {
-      margin-top: 20px;
-      margin-right: 10px;
-      padding: 10px 20px;
-      background-color: #d10000;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: transform 0.2s;
     }
-    .card {
-      background: #f4f4f4;
-      padding: 20px;
-      margin-top: 30px;
-      border-radius: 10px;
-      white-space: pre-wrap;
+
+    .button:hover {
+      transform: scale(1.05);
+    }
+
+    .anomalie {
+      background-color: #d10000;
+    }
+
+    .amelioration {
+      background-color: #2e8b57;
     }
   </style>
 </head>
 <body>
 
-  <!-- Splash -->
-  <div id="splash-screen"></div>
-
-  <!-- Header -->
   <header>
-    <div class="header-kja">KJA</div>
-    <h1 class="header-title">QRQC – Anomalie</h1>
-    <div class="sub-logo-text">Free PRO</div>
+    <h1>🚀 Bienvenue sur l’Espace QRQC – Free PRO</h1>
   </header>
 
   <div class="container">
-    <label for="date">Date</label>
-    <input type="date" id="date" />
-
-    <label for="nom">Nom (Qui)</label>
-    <input type="text" id="nom" />
-
-    <label for="jfp">JFP Client</label>
-    <input type="text" id="jfp" />
-
-    <label for="ecart">Écart factuel constaté</label>
-    <textarea id="ecart"></textarea>
-
-    <label for="cause">Cause racine possible</label>
-    <textarea id="cause"></textarea>
-
-    <label for="urgence">Urgence (1 à 5)</label>
-    <input type="range" id="urgence" min="1" max="5" value="3" oninput="document.getElementById('urgence-val').innerText = this.value">
-    <p>Valeur sélectionnée : <strong id="urgence-val">3</strong></p>
-
-    <label for="priorite">Priorité</label>
-    <select id="priorite">
-      <option value="Faible">Faible</option>
-      <option value="Moyenne">Moyenne</option>
-      <option value="Élevée">Élevée</option>
-    </select>
-
-    <button onclick="genererCR()">Générer le CR</button>
-    <button onclick="copierTexte()">📋 Copier</button>
-    <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
-    <button onclick="telechargerPDFAvecImages()">📄 Télécharger PDF Recto/Verso</button>
-    <button onclick="telechargerPDFPropre()">🧾 Télécharger PDF Propre</button>
-
-    <div id="output" class="card" style="display:none;"></div>
+    <button class="button anomalie" onclick="location.href='anomalie.html'">Déclarer une Anomalie</button>
+    <button class="button amelioration" onclick="location.href='amelioration.html'">Proposer une Amélioration</button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    setTimeout(() => {
-      const splash = document.getElementById('splash-screen');
-      if (splash) splash.remove();
-    }, 3000);
-
-    let texteFinal = "";
-
-    function genererCR() {
-      const date = document.getElementById("date").value;
-      const nom = document.getElementById("nom").value;
-      const jfp = document.getElementById("jfp").value;
-      const ecart = document.getElementById("ecart").value;
-      const cause = document.getElementById("cause").value;
-      const urgence = document.getElementById("urgence").value;
-      const priorite = document.getElementById("priorite").value;
-
-      texteFinal = `📝 Fiche QRQC\n\n` +
-        `📅 Date : ${date}\n` +
-        `👤 Nom : ${nom}\n` +
-        `🧾 JFP Client : ${jfp}\n` +
-        `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
-        `🧠 Cause racine possible :\n${cause}\n\n` +
-        `🔥 Urgence : ${urgence} / 5\n` +
-        `🚦 Priorité : ${priorite}`;
-
-      const output = document.getElementById("output");
-      output.textContent = texteFinal;
-      output.style.display = "block";
-    }
-
-    function copierTexte() {
-      if (!texteFinal) return;
-      navigator.clipboard.writeText(texteFinal).then(() => {
-        alert("Le compte rendu a été copié !");
-      });
-    }
-
-    function telechargerTxt() {
-      if (!texteFinal) return;
-      const blob = new Blob([texteFinal], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "fiche_qrqc.txt";
-      link.click();
-    }
-
-    async function telechargerPDFAvecImages() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const date = document.getElementById("date").value;
-      const nom = document.getElementById("nom").value;
-      const jfp = document.getElementById("jfp").value;
-      const ecart = document.getElementById("ecart").value;
-      const cause = document.getElementById("cause").value;
-
-      const fond1 = await loadImage("fond_recto.png");
-      const fond2 = await loadImage("Image (12).jpeg");
-
-      doc.addImage(fond1, "PNG", 0, 0, 210, 297);
-      doc.setFontSize(12);
-      doc.text(`Date : ${date}`, 25, 38);
-      doc.text(`Qui : ${nom}`, 25, 48);
-      doc.text(`ID Client : ${jfp}`, 25, 58);
-      doc.text(`Écart : ${ecart}`, 25, 70);
-      doc.text(`Cause : ${cause}`, 25, 85);
-
-      doc.addPage();
-      doc.addImage(fond2, "JPEG", 0, 0, 210, 297);
-      doc.text(`Correctif à compléter...`, 25, 70);
-
-      doc.save("QRQC_recto_verso.pdf");
-    }
-
-    async function telechargerPDFPropre() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      const date = document.getElementById("date").value;
-      const nom = document.getElementById("nom").value;
-      const jfp = document.getElementById("jfp").value;
-      const ecart = document.getElementById("ecart").value;
-      const cause = document.getElementById("cause").value;
-      const urgence = document.getElementById("urgence").value;
-      const priorite = document.getElementById("priorite").value;
-
-      doc.setFont("Arial");
-      doc.setFontSize(14);
-      doc.setTextColor(200, 0, 0);
-      doc.text("QRQC – Pôle Qualité", 105, 20, { align: "center" });
-
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      let y = 40;
-      doc.text(`Date : ${date}`, 20, y); y += 10;
-      doc.text(`Nom : ${nom}`, 20, y); y += 10;
-      doc.text(`JFP Client : ${jfp}`, 20, y); y += 10;
-      doc.text("Écart factuel constaté :", 20, y); y += 8;
-      doc.text(doc.splitTextToSize(ecart, 170), 25, y); y += 20;
-      doc.text("Cause racine possible :", 20, y); y += 8;
-      doc.text(doc.splitTextToSize(cause, 170), 25, y); y += 20;
-      doc.text(`Urgence : ${urgence} / 5`, 20, y); y += 10;
-      doc.text(`Priorité : ${priorite}`, 20, y);
-
-      doc.save("QRQC_propre.pdf");
-    }
-
-    function loadImage(url) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-          resolve(canvas.toDataURL("image/png"));
-        };
-        img.src = url;
-      });
-    }
-  </script>
 </body>
 </html>
