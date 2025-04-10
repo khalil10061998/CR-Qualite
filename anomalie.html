@@ -13,7 +13,6 @@
       background-color: #f7f7f7;
     }
 
-    /* Splash screen */
     #splash-screen {
       position: fixed;
       top: 0; left: 0;
@@ -36,16 +35,17 @@
       }
     }
 
-    /* Flèche retour */
     .back-arrow {
       position: absolute;
       top: 20px;
       left: 20px;
-      font-size: 28px;
+      font-size: 30px;
       color: white;
       text-decoration: none;
       font-weight: bold;
-      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 5px 12px;
+      border-radius: 8px;
     }
 
     header {
@@ -139,6 +139,13 @@
     <label for="date">Date</label>
     <input type="date" id="date" />
 
+    <label for="priorite">Priorité</label>
+    <select id="priorite">
+      <option value="Faible">Faible</option>
+      <option value="Moyenne">Moyenne</option>
+      <option value="Élevée">Élevée</option>
+    </select>
+
     <label for="nom">Nom (Qui)</label>
     <input type="text" id="nom" />
 
@@ -151,15 +158,13 @@
     <label for="cause">Cause racine possible</label>
     <textarea id="cause"></textarea>
 
-    <label for="urgence">Urgence (1 à 5)</label>
-    <input type="range" id="urgence" min="1" max="5" value="3" oninput="document.getElementById('urgence-val').innerText = this.value">
-    <p>Valeur sélectionnée : <strong id="urgence-val">3</strong></p>
-
-    <label for="priorite">Priorité</label>
-    <select id="priorite">
-      <option value="Faible">Faible</option>
-      <option value="Moyenne">Moyenne</option>
-      <option value="Élevée">Élevée</option>
+    <label for="urgence">Urgence (1 = faible / 5 = critique)</label>
+    <select id="urgence">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3" selected>3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
     </select>
 
     <button onclick="genererCR()">Générer le CR</button>
@@ -179,21 +184,21 @@
 
     function genererCR() {
       const date = document.getElementById("date").value;
+      const priorite = document.getElementById("priorite").value;
       const nom = document.getElementById("nom").value;
       const jfp = document.getElementById("jfp").value;
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
       const urgence = document.getElementById("urgence").value;
-      const priorite = document.getElementById("priorite").value;
 
       texteFinal = `📝 Fiche QRQC\n\n` +
         `📅 Date : ${date}\n` +
+        `🚦 Priorité : ${priorite}\n` +
         `👤 Nom : ${nom}\n` +
         `🧾 JFP Client : ${jfp}\n` +
         `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
         `🧠 Cause racine possible :\n${cause}\n\n` +
-        `🔥 Urgence : ${urgence} / 5\n` +
-        `🚦 Priorité : ${priorite}`;
+        `🔥 Urgence : ${urgence} / 5`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
@@ -218,3 +223,4 @@
   </script>
 </body>
 </html>
+
