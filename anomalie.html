@@ -35,19 +35,6 @@
       }
     }
 
-    .back-arrow {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 30px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      background-color: rgba(0, 0, 0, 0.1);
-      padding: 5px 12px;
-      border-radius: 8px;
-    }
-
     header {
       background-color: #d10000;
       color: white;
@@ -62,6 +49,19 @@
       right: 20px;
       font-size: 12px;
       opacity: 0.3;
+    }
+
+    .back-arrow {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 24px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 8px;
     }
 
     .header-title {
@@ -118,6 +118,19 @@
       border-radius: 10px;
       white-space: pre-wrap;
     }
+
+    .slider-container {
+      margin-top: 20px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5px;
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -126,7 +139,7 @@
   <div id="splash-screen"></div>
 
   <!-- Flèche retour -->
-  <a href="index.html" class="back-arrow">⬅</a>
+  <a href="index.html" class="back-arrow">←</a>
 
   <!-- Header -->
   <header>
@@ -158,14 +171,13 @@
     <label for="cause">Cause racine possible</label>
     <textarea id="cause"></textarea>
 
-    <label for="urgence">Urgence (1 = faible / 5 = critique)</label>
-    <select id="urgence">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3" selected>3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
+    <label for="urgence">Urgence</label>
+    <div class="slider-container">
+      <input type="range" id="urgence" min="1" max="5" value="3" step="1" />
+      <div class="slider-labels">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+      </div>
+    </div>
 
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
@@ -223,4 +235,3 @@
   </script>
 </body>
 </html>
-
