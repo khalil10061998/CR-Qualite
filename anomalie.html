@@ -21,25 +21,31 @@
       position: relative;
     }
 
+    .back-arrow {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 22px;
+      background-color: white;
+      color: #d10000;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+
     .header-kja {
       position: absolute;
       top: 10px;
       right: 20px;
       font-size: 12px;
       opacity: 0.3;
-    }
-
-    .back-arrow {
-      position: absolute;
-      top: 15px;
-      left: 20px;
-      font-size: 24px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      background-color: rgba(255, 255, 255, 0.15);
-      padding: 6px 12px;
-      border-radius: 8px;
     }
 
     .header-title {
@@ -113,10 +119,9 @@
 </head>
 <body>
 
-  <!-- Flèche retour -->
-  <a href="index.html" class="back-arrow">←</a>
-
+  <!-- Header avec flèche -->
   <header>
+    <a href="index.html" class="back-arrow">←</a>
     <div class="header-kja">KJA</div>
     <h1 class="header-title">QRQC – Anomalie</h1>
     <div class="sub-logo-text">Free PRO</div>
@@ -204,4 +209,5 @@
   </script>
 </body>
 </html>
+
 
