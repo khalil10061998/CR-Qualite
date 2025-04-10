@@ -37,7 +37,6 @@
       font-weight: bold;
       text-decoration: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      z-index: 10;
     }
 
     .header-kja {
@@ -97,6 +96,10 @@
       margin-top: 5px;
     }
 
+    #refBlock {
+      margin-top: 10px;
+    }
+
     button {
       margin-top: 20px;
       margin-right: 10px;
@@ -119,7 +122,6 @@
 </head>
 <body>
 
-  <!-- Header avec flèche -->
   <header>
     <a href="index.html" class="back-arrow">←</a>
     <div class="header-kja">KJA</div>
@@ -141,8 +143,18 @@
     <label for="nom">Nom (Qui)</label>
     <input type="text" id="nom" />
 
-    <label for="jfp">JFP Client</label>
-    <input type="text" id="jfp" />
+    <label for="typeRef">Service</label>
+    <select id="typeRef" onchange="afficherChampReference()">
+      <option value="">-- Choisir --</option>
+      <option value="JFU">JFU</option>
+      <option value="JFP">JFP</option>
+      <option value="JFM">JFM</option>
+    </select>
+
+    <div id="refBlock" style="display:none;">
+      <label for="reference">Référence</label>
+      <input type="text" id="reference" />
+    </div>
 
     <label for="ecart">Écart factuel constaté</label>
     <textarea id="ecart"></textarea>
@@ -168,11 +180,18 @@
   <script>
     let texteFinal = "";
 
+    function afficherChampReference() {
+      const typeRef = document.getElementById("typeRef").value;
+      const refBlock = document.getElementById("refBlock");
+      refBlock.style.display = typeRef ? "block" : "none";
+    }
+
     function genererCR() {
       const date = document.getElementById("date").value;
       const priorite = document.getElementById("priorite").value;
       const nom = document.getElementById("nom").value;
-      const jfp = document.getElementById("jfp").value;
+      const typeRef = document.getElementById("typeRef").value;
+      const reference = document.getElementById("reference").value;
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
       const urgence = document.getElementById("urgence").value;
@@ -181,7 +200,7 @@
         `📅 Date : ${date}\n` +
         `🚦 Priorité : ${priorite}\n` +
         `👤 Nom : ${nom}\n` +
-        `🧾 JFP Client : ${jfp}\n` +
+        `🧾 Service (${typeRef}) : ${reference}\n` +
         `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
         `🧠 Cause racine possible :\n${cause}\n\n` +
         `🔥 Urgence : ${urgence} / 5`;
@@ -209,5 +228,4 @@
   </script>
 </body>
 </html>
-
 
