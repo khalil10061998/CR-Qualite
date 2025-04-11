@@ -79,39 +79,34 @@
       background-color: #2e8b57;
     }
 
-    section {
-      max-width: 1000px;
-      margin: 50px auto;
-      padding: 0 20px;
+    .historique {
+      background-color: #444;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    table th, table td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: center;
-    }
-
-    table thead {
-      background-color: #eee;
-    }
-
-    .anomalie-head {
-      background-color: #f8d7da;
-    }
-
-    .amelioration-head {
-      background-color: #d4edda;
-    }
-
-    h2 {
-      text-align: center;
+    .urgent-section {
       margin-top: 60px;
+      padding: 20px;
+      background-color: #fff0f0;
+      border: 2px solid #d10000;
+      border-radius: 10px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .urgent-section h2 {
+      color: #d10000;
+      margin-bottom: 10px;
+    }
+
+    .urgent-case {
+      text-align: left;
+      background-color: #fff;
+      margin: 10px 0;
+      padding: 10px;
+      border-left: 5px solid #d10000;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -120,59 +115,44 @@
   <!-- Splash -->
   <div id="splash-screen"></div>
 
-  <!-- Header -->
   <header>
     <h1>🚀 Bienvenue sur l’Espace QRQC – Free PRO</h1>
   </header>
 
-  <!-- Boutons -->
   <div class="container">
     <button class="button anomalie" onclick="location.href='anomalie.html'">Déclarer une Anomalie</button>
     <button class="button amelioration" onclick="location.href='amelioration.html'">Proposer une Amélioration</button>
+    <button class="button historique" onclick="location.href='historique.html'">📋 Accéder à l’Historique</button>
   </div>
 
-  <!-- Historique -->
-  <section>
-    <h2 style="color:#d10000;">📋 Historique des Anomalies</h2>
-    <table id="tableAnomalie">
-      <thead class="anomalie-head">
-        <tr>
-          <th>Date</th>
-          <th>Nom</th>
-          <th>Service</th>
-          <th>Référence</th>
-          <th>Urgence</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Données anomalies ici -->
-      </tbody>
-    </table>
-
-    <h2 style="color:#2e8b57;">✅ Historique des Améliorations</h2>
-    <table id="tableAmelioration">
-      <thead class="amelioration-head">
-        <tr>
-          <th>Date</th>
-          <th>Nom</th>
-          <th>Domaine</th>
-          <th>Service</th>
-          <th>Urgence</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Données améliorations ici -->
-      </tbody>
-    </table>
-  </section>
+  <!-- Urgents -->
+  <div class="urgent-section" id="urgent-cases">
+    <h2>⚠️ Cas urgents en cours</h2>
+    <!-- Ces cas seront remplis par JS si urgence = 5 -->
+  </div>
 
   <script>
     setTimeout(() => {
       const splash = document.getElementById('splash-screen');
       if (splash) splash.remove();
     }, 3000);
+
+    // Exemple temporaire : affichage de cas simulés urgents (à remplacer par données réelles depuis Google Sheets plus tard)
+    const casUrgents = [
+      { type: "Anomalie", nom: "Ali", date: "2024-04-11", sujet: "Téléphonie HS", urgence: 5 },
+      { type: "Amélioration", nom: "Sara", date: "2024-04-10", sujet: "Ajout planning", urgence: 5 }
+    ];
+
+    const urgentContainer = document.getElementById("urgent-cases");
+    casUrgents.forEach(cas => {
+      const div = document.createElement("div");
+      div.className = "urgent-case";
+      div.innerHTML = `
+        <strong>${cas.type}</strong> – ${cas.nom} – ${cas.date}<br>
+        💬 ${cas.sujet} <br> 🔥 Urgence : ${cas.urgence}/5
+      `;
+      urgentContainer.appendChild(div);
+    });
   </script>
 
 </body>
