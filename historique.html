@@ -1,93 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QRQC – Historique</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f7f7f7;
       margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
       padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .back-arrow {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 22px;
+      background-color: white;
+      color: #333;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     h1 {
-      text-align: center;
-      color: #d10000;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
     }
 
     h2 {
-      margin-top: 50px;
-      color: #333;
+      margin-top: 40px;
+      color: #d10000;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
+      padding: 10px;
       text-align: left;
+      font-size: 14px;
     }
 
     th {
-      background-color: #d10000;
-      color: white;
+      background-color: #eee;
     }
 
-    tr:hover {
-      background-color: #f1f1f1;
-      cursor: pointer;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    .status {
+    .urgent {
+      background-color: #ffdede;
       font-weight: bold;
-      padding: 5px 10px;
-      border-radius: 4px;
-      display: inline-block;
     }
-
-    .en-cours { background-color: orange; color: white; }
-    .pris { background-color: #2e8b57; color: white; }
-    .resolu { background-color: #007bff; color: white; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>📊 Historique QRQC – Free PRO</h1>
+  <header>
+    <a href="index.html" class="back-arrow">←</a>
+    <h1>Historique QRQC</h1>
+  </header>
 
-    <!-- Tableau Anomalies -->
-    <h2>Anomalies déclarées</h2>
-    <table id="anomalieTable">
+  <div class="container">
+    <h2>Anomalies</h2>
+    <table id="table-anomalies">
       <thead>
         <tr>
           <th>Date</th>
           <th>Nom</th>
           <th>Service</th>
           <th>Référence</th>
-          <th>Priorité</th>
           <th>Urgence</th>
           <th>Statut</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Lignes générées automatiquement ici -->
+        <!-- Rempli dynamiquement -->
       </tbody>
     </table>
 
-    <!-- Tableau Améliorations -->
-    <h2>Propositions d’amélioration</h2>
-    <table id="ameliorationTable">
+    <h2>Améliorations</h2>
+    <table id="table-ameliorations">
       <thead>
         <tr>
           <th>Date</th>
@@ -100,15 +115,10 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Données à venir -->
+        <!-- Rempli dynamiquement -->
       </tbody>
     </table>
   </div>
-
-  <script>
-    // Ici viendront les fonctions de récupération depuis Google Sheets
-    // et le clic sur une ligne avec demande de code + changement de statut
-  </script>
 
 </body>
 </html>
