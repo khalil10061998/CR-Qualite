@@ -53,6 +53,20 @@
       color: #d10000;
     }
 
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      margin-bottom: 20px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -74,6 +88,10 @@
       background-color: #ffdede;
       font-weight: bold;
     }
+
+    .highlight {
+      background-color: #ffffd5;
+    }
   </style>
 </head>
 <body>
@@ -84,6 +102,9 @@
   </header>
 
   <div class="container">
+    <label for="filtre-personne">Filtrer par “Pris en charge par” :</label>
+    <input type="text" id="filtre-personne" oninput="filtrerParResponsable()" placeholder="Tape un prénom..." />
+
     <h2>Anomalies</h2>
     <table id="table-anomalies">
       <thead>
@@ -91,13 +112,17 @@
           <th>Date</th>
           <th>Nom</th>
           <th>Service</th>
+          <th>Type</th>
           <th>Référence</th>
+          <th>Sujet</th>
+          <th>Cause</th>
           <th>Urgence</th>
           <th>Statut</th>
+          <th>Pris en charge par</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Rempli dynamiquement -->
+        <!-- Données dynamiques anomalies -->
       </tbody>
     </table>
 
@@ -109,16 +134,34 @@
           <th>Nom</th>
           <th>Domaine</th>
           <th>Service</th>
+          <th>Type</th>
           <th>Référence</th>
+          <th>Sujet</th>
+          <th>Cause</th>
           <th>Urgence</th>
           <th>Statut</th>
+          <th>Pris en charge par</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Rempli dynamiquement -->
+        <!-- Données dynamiques améliorations -->
       </tbody>
     </table>
   </div>
 
+  <script>
+    function filtrerParResponsable() {
+      const filtre = document.getElementById("filtre-personne").value.toLowerCase();
+      const tables = ["table-anomalies", "table-ameliorations"];
+      tables.forEach(id => {
+        const rows = document.querySelectorAll(`#${id} tbody tr`);
+        rows.forEach(row => {
+          const responsable = row.cells[row.cells.length - 1]?.textContent.toLowerCase();
+          row.style.display = responsable.includes(filtre) || filtre === "" ? "" : "none";
+        });
+      });
+    }
+  </script>
 </body>
 </html>
+
