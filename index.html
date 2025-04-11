@@ -78,6 +78,41 @@
     .amelioration {
       background-color: #2e8b57;
     }
+
+    section {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    table thead {
+      background-color: #eee;
+    }
+
+    .anomalie-head {
+      background-color: #f8d7da;
+    }
+
+    .amelioration-head {
+      background-color: #d4edda;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 60px;
+    }
   </style>
 </head>
 <body>
@@ -85,14 +120,60 @@
   <!-- Splash -->
   <div id="splash-screen"></div>
 
+  <!-- Header -->
   <header>
     <h1>🚀 Bienvenue sur l’Espace QRQC – Free PRO</h1>
   </header>
 
+  <!-- Boutons -->
   <div class="container">
     <button class="button anomalie" onclick="location.href='anomalie.html'">Déclarer une Anomalie</button>
     <button class="button amelioration" onclick="location.href='amelioration.html'">Proposer une Amélioration</button>
   </div>
+
+  <!-- Historique -->
+  <section>
+    <h2 style="color:#d10000;">📋 Historique des Anomalies</h2>
+    <table id="tableAnomalie">
+      <thead class="anomalie-head">
+        <tr>
+          <th>Date</th>
+          <th>Nom</th>
+          <th>Service</th>
+          <th>Référence</th>
+          <th>Urgence</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Données anomalies ici -->
+      </tbody>
+    </table>
+
+    <h2 style="color:#2e8b57;">✅ Historique des Améliorations</h2>
+    <table id="tableAmelioration">
+      <thead class="amelioration-head">
+        <tr>
+          <th>Date</th>
+          <th>Nom</th>
+          <th>Domaine</th>
+          <th>Service</th>
+          <th>Urgence</th>
+          <th>Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Données améliorations ici -->
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) splash.remove();
+    }, 3000);
+  </script>
 
 </body>
 </html>
