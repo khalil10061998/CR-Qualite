@@ -200,19 +200,21 @@
       const cause = document.getElementById("cause").value;
       const urgence = document.getElementById("urgence").value;
 
-      texteFinal = `📝 Fiche QRQC – Proposition d'Amélioration\n\n` +
+      texteFinal = `📝 Fiche QRQC – Amélioration\n\n` +
         `📅 Date : ${date}\n` +
         `🚦 Priorité : ${priorite}\n` +
         `👤 Nom : ${nom}\n` +
         `🏷️ Domaine : ${domaine}\n` +
         `🧾 Service (${typeRef}) : ${reference}\n` +
-        `💡 Suggestion / Idée :\n${suggestion}\n\n` +
-        `🧠 Cause racine possible :\n${cause}\n\n` +
+        `💡 Suggestion :\n${suggestion}\n\n` +
+        `🧠 Cause :\n${cause}\n\n` +
         `🔥 Urgence : ${urgence} / 5`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
       output.style.display = "block";
+
+      envoyerVersGoogleSheet();
     }
 
     function copierTexte() {
@@ -230,6 +232,37 @@
       link.download = "fiche_amelioration.txt";
       link.click();
     }
+
+    function envoyerVersGoogleSheet() {
+      const date = document.getElementById("date").value;
+      const priorite = document.getElementById("priorite").value;
+      const nom = document.getElementById("nom").value;
+      const domaine = document.getElementById("domaine").value;
+      const service = document.getElementById("typeRef").value;
+      const reference = document.getElementById("reference").value;
+      const suggestion = document.getElementById("suggestion").value;
+      const cause = document.getElementById("cause").value;
+      const urgence = document.getElementById("urgence").value;
+
+      fetch("https://script.google.com/macros/s/AKfycbzKEz2R82iV5z5R34VQlgKHXp9GCZV3NG3z_QyJ-Ke_3SF3ZGewnAOeXb-q9RFeVLXeXw/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date,
+          priorite,
+          nom,
+          domaine,
+          service,
+          reference,
+          suggestion,
+          cause,
+          urgence,
+          type: "amelioration"
+        })
+      });
+    }
   </script>
 </body>
 </html>
+
