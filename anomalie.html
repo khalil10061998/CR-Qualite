@@ -190,24 +190,26 @@
       const date = document.getElementById("date").value;
       const priorite = document.getElementById("priorite").value;
       const nom = document.getElementById("nom").value;
-      const typeRef = document.getElementById("typeRef").value;
+      const service = document.getElementById("typeRef").value;
       const reference = document.getElementById("reference").value;
       const ecart = document.getElementById("ecart").value;
       const cause = document.getElementById("cause").value;
       const urgence = document.getElementById("urgence").value;
 
-      texteFinal = `📝 Fiche QRQC\n\n` +
+      texteFinal = `📝 Fiche QRQC – Anomalie\n\n` +
         `📅 Date : ${date}\n` +
         `🚦 Priorité : ${priorite}\n` +
         `👤 Nom : ${nom}\n` +
-        `🧾 Service (${typeRef}) : ${reference}\n` +
-        `⚠️ Écart factuel constaté :\n${ecart}\n\n` +
-        `🧠 Cause racine possible :\n${cause}\n\n` +
+        `🧾 Service (${service}) : ${reference}\n` +
+        `⚠️ Écart : ${ecart}\n\n` +
+        `🧠 Cause : ${cause}\n\n` +
         `🔥 Urgence : ${urgence} / 5`;
 
       const output = document.getElementById("output");
       output.textContent = texteFinal;
       output.style.display = "block";
+
+      envoyerVersGoogleSheet();
     }
 
     function copierTexte() {
@@ -225,7 +227,34 @@
       link.download = "fiche_qrqc.txt";
       link.click();
     }
+
+    function envoyerVersGoogleSheet() {
+      const date = document.getElementById("date").value;
+      const priorite = document.getElementById("priorite").value;
+      const nom = document.getElementById("nom").value;
+      const service = document.getElementById("typeRef").value;
+      const reference = document.getElementById("reference").value;
+      const ecart = document.getElementById("ecart").value;
+      const cause = document.getElementById("cause").value;
+      const urgence = document.getElementById("urgence").value;
+
+      fetch("https://script.google.com/macros/s/AKfycbzKEz2R82iV5z5R34VQlgKHXp9GCZV3NG3z_QyJ-Ke_3SF3ZGewnAOeXb-q9RFeVLXeXw/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date,
+          priorite,
+          nom,
+          service,
+          reference,
+          ecart,
+          cause,
+          urgence,
+          type: "anomalie"
+        })
+      });
+    }
   </script>
 </body>
 </html>
-
