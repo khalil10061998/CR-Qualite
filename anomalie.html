@@ -4,44 +4,215 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QRQC – Anomalie</title>
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0 20px;
+      background-color: #f7f7f7;
+    }
+    header {
+      background-color: #d10000;
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .back-arrow {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 22px;
+      background-color: white;
+      color: #d10000;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .header-kja {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 12px;
+      opacity: 0.3;
+    }
+    .header-title {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 0;
+    }
+    .sub-logo-text {
+      font-size: 1.4em;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .slider-container {
+      margin-top: 20px;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5px;
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
+    #refBlock {
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 20px;
+      margin-right: 10px;
+      padding: 10px 20px;
+      background-color: #d10000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .card {
+      background: #f4f4f4;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-  <input type="date" id="date" />
-  <select id="priorite">
-    <option>Faible</option>
-    <option>Moyenne</option>
-    <option>Élevée</option>
-  </select>
-  <input type="text" id="nom" placeholder="Nom" />
-  <select id="typeRef">
-    <option>JFU</option>
-    <option>JFP</option>
-    <option>JFM</option>
-  </select>
-  <input type="text" id="reference" placeholder="Référence" />
-  <textarea id="ecart" placeholder="Écart constaté"></textarea>
-  <textarea id="cause" placeholder="Cause racine"></textarea>
-  <input type="range" id="urgence" min="1" max="5" />
+  <header>
+    <a href="index.html" class="back-arrow">←</a>
+    <div class="header-kja">KJA</div>
+    <h1 class="header-title">QRQC – Anomalie</h1>
+    <div class="sub-logo-text">Free PRO</div>
+  </header>
 
-  <button onclick="envoyerVersGoogleSheet()">Envoyer vers Google Sheet</button>
+  <div class="container">
+    <label for="date">Date</label>
+    <input type="date" id="date" />
+    <label for="priorite">Priorité</label>
+    <select id="priorite">
+      <option value="Faible">Faible</option>
+      <option value="Moyenne">Moyenne</option>
+      <option value="Élevée">Élevée</option>
+    </select>
+    <label for="nom">Nom (Qui)</label>
+    <input type="text" id="nom" />
+    <label for="typeRef">Service</label>
+    <select id="typeRef" onchange="afficherChampReference()">
+      <option value="">-- Choisir --</option>
+      <option value="JFU">JFU</option>
+      <option value="JFP">JFP</option>
+      <option value="JFM">JFM</option>
+    </select>
+    <div id="refBlock" style="display:none;">
+      <label for="reference">Référence</label>
+      <input type="text" id="reference" />
+    </div>
+    <label for="ecart">Écart factuel constaté</label>
+    <textarea id="ecart"></textarea>
+    <label for="cause">Cause racine possible</label>
+    <textarea id="cause"></textarea>
+    <label for="urgence">Urgence</label>
+    <div class="slider-container">
+      <input type="range" id="urgence" min="1" max="5" value="3" step="1" />
+      <div class="slider-labels">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+      </div>
+    </div>
+    <button onclick="genererCR()">Générer le CR</button>
+    <button onclick="copierTexte()">📋 Copier</button>
+    <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
+    <div id="output" class="card" style="display:none;"></div>
+  </div>
 
   <script>
+    let texteFinal = "";
+
+    function afficherChampReference() {
+      const typeRef = document.getElementById("typeRef").value;
+      document.getElementById("refBlock").style.display = typeRef ? "block" : "none";
+    }
+
+    function genererCR() {
+      const date = document.getElementById("date").value;
+      const priorite = document.getElementById("priorite").value;
+      const nom = document.getElementById("nom").value;
+      const service = document.getElementById("typeRef").value;
+      const reference = document.getElementById("reference").value;
+      const ecart = document.getElementById("ecart").value;
+      const cause = document.getElementById("cause").value;
+      const urgence = document.getElementById("urgence").value;
+
+      texteFinal = `📝 Fiche QRQC – Anomalie\n\n📅 Date : ${date}\n🚦 Priorité : ${priorite}\n👤 Nom : ${nom}\n🧾 Service (${service}) : ${reference}\n⚠️ Écart : ${ecart}\n\n🧠 Cause : ${cause}\n\n🔥 Urgence : ${urgence} / 5`;
+
+      const output = document.getElementById("output");
+      output.textContent = texteFinal;
+      output.style.display = "block";
+
+      envoyerVersGoogleSheet();
+    }
+
+    function copierTexte() {
+      if (!texteFinal) return;
+      navigator.clipboard.writeText(texteFinal).then(() => alert("Le compte rendu a été copié !"));
+    }
+
+    function telechargerTxt() {
+      if (!texteFinal) return;
+      const blob = new Blob([texteFinal], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "fiche_qrqc.txt";
+      link.click();
+    }
+
     function envoyerVersGoogleSheet() {
-      fetch("Thttps://script.google.com/macros/s/AKfycbz7Bh17w0qgmPVzGBJW7MjbvfJgEBJG7U0wGh5mt5NvyGYpSPrId9Sdlm0RNALpiT5qkQ/execIPT", {
+      const data = {
+        date: document.getElementById("date").value,
+        priorite: document.getElementById("priorite").value,
+        nom: document.getElementById("nom").value,
+        service: document.getElementById("typeRef").value,
+        reference: document.getElementById("reference").value,
+        ecart: document.getElementById("ecart").value,
+        cause: document.getElementById("cause").value,
+        urgence: document.getElementById("urgence").value,
+        type: "anomalie"
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbz7Bh17w0qgmPVzGBJW7MjbvfJgEBJG7U0wGh5mt5NvyGYpSPrId9Sdlm0RNALpiT5qkQ/exec", {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date: document.getElementById("date").value,
-          priorite: document.getElementById("priorite").value,
-          nom: document.getElementById("nom").value,
-          service: document.getElementById("typeRef").value,
-          reference: document.getElementById("reference").value,
-          ecart: document.getElementById("ecart").value,
-          cause: document.getElementById("cause").value,
-          urgence: document.getElementById("urgence").value,
-          type: "anomalie"
-        })
+        body: JSON.stringify(data)
       });
     }
   </script>
