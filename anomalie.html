@@ -6,104 +6,47 @@
   <title>QRQC – Anomalie</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0 20px;
-      background-color: #f7f7f7;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0 20px; background-color: #f7f7f7; }
     header {
-      background-color: #d10000;
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-      position: relative;
+      background-color: #d10000; color: white; padding: 40px 20px;
+      text-align: center; position: relative;
     }
     .back-arrow {
-      position: absolute;
-      top: 15px;
-      left: 20px;
-      font-size: 22px;
-      background-color: white;
-      color: #d10000;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      text-decoration: none;
+      position: absolute; top: 15px; left: 20px; font-size: 22px;
+      background-color: white; color: #d10000; border-radius: 50%;
+      width: 40px; height: 40px; display: flex; align-items: center;
+      justify-content: center; font-weight: bold; text-decoration: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    .header-kja {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 12px;
-      opacity: 0.3;
-    }
-    .header-title {
-      font-size: 2em;
-      font-weight: bold;
-      margin: 0;
-    }
-    .sub-logo-text {
-      font-size: 1.4em;
-      font-weight: 600;
-      margin-top: 10px;
-    }
+    .header-kja { position: absolute; top: 10px; right: 20px; font-size: 12px; opacity: 0.3; }
+    .header-title { font-size: 2em; font-weight: bold; margin: 0; }
+    .sub-logo-text { font-size: 1.4em; font-weight: 600; margin-top: 10px; }
     .container {
-      max-width: 900px;
-      margin: 20px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 900px; margin: 20px auto; background: white; padding: 30px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
+    label { display: block; margin-top: 20px; font-weight: bold; }
     input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 14px;
+      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc;
+      border-radius: 5px; font-size: 14px;
     }
-    .slider-container {
-      margin-top: 20px;
-    }
+    .slider-container { margin-top: 20px; }
     .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 5px;
-      font-size: 14px;
-      color: #555;
-      margin-top: 5px;
+      display: flex; justify-content: space-between; padding: 0 5px;
+      font-size: 14px; color: #555; margin-top: 5px;
     }
-    #refBlock {
-      margin-top: 10px;
-    }
+    #refBlock { margin-top: 10px; }
     button {
-      margin-top: 20px;
-      margin-right: 10px;
-      padding: 10px 20px;
-      background-color: #d10000;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      margin-top: 20px; margin-right: 10px; padding: 10px 20px;
+      background-color: #d10000; color: white; border: none;
+      border-radius: 5px; cursor: pointer;
+    }
+    #btn-valider {
+      background-color: #28a745;
     }
     .card {
-      background: #f4f4f4;
-      padding: 20px;
-      margin-top: 30px;
-      border-radius: 10px;
-      white-space: pre-wrap;
+      background: #f4f4f4; padding: 20px; margin-top: 30px;
+      border-radius: 10px; white-space: pre-wrap;
     }
   </style>
 </head>
@@ -148,9 +91,12 @@
         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
       </div>
     </div>
+
     <button onclick="genererCR()">Générer le CR</button>
     <button onclick="copierTexte()">📋 Copier</button>
     <button onclick="telechargerTxt()">📥 Télécharger TXT</button>
+    <button id="btn-valider" onclick="validerEnvoi()" style="display:none;">✅ Valider l’envoi</button>
+
     <div id="output" class="card" style="display:none;"></div>
   </div>
 
@@ -174,9 +120,9 @@
 
       texteFinal = `📝 Fiche QRQC – Anomalie\n\n📅 Date : ${date}\n🚦 Priorité : ${priorite}\n👤 Nom : ${nom}\n🧾 Service (${service}) : ${reference}\n⚠️ Écart : ${ecart}\n\n🧠 Cause : ${cause}\n\n🔥 Urgence : ${urgence} / 5`;
 
-      const output = document.getElementById("output");
-      output.textContent = texteFinal;
-      output.style.display = "block";
+      document.getElementById("output").textContent = texteFinal;
+      document.getElementById("output").style.display = "block";
+      document.getElementById("btn-valider").style.display = "inline-block";
 
       envoyerVersGoogleSheet();
     }
@@ -193,6 +139,11 @@
       link.href = URL.createObjectURL(blob);
       link.download = "fiche_qrqc.txt";
       link.click();
+    }
+
+    function validerEnvoi() {
+      alert("✅ Fiche validée et envoyée !");
+      document.getElementById("btn-valider").style.display = "none";
     }
 
     function envoyerVersGoogleSheet() {
