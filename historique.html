@@ -5,93 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QRQC – Historique</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      position: relative;
-    }
-
+    body { font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0; }
+    header { background-color: #333; color: white; padding: 20px; text-align: center; position: relative; }
     .back-arrow {
-      position: absolute;
-      top: 15px;
-      left: 20px;
-      font-size: 22px;
-      background-color: white;
-      color: #333;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      text-decoration: none;
+      position: absolute; top: 15px; left: 20px; font-size: 22px; background-color: white;
+      color: #333; border-radius: 50%; width: 40px; height: 40px; display: flex;
+      align-items: center; justify-content: center; font-weight: bold; text-decoration: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-
     h1 { margin: 0; }
-
-    .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    h2 {
-      margin-top: 40px;
-      color: #d10000;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    th {
-      background-color: #eee;
-    }
-
-    .urgent {
-      background-color: #ffdede;
-      font-weight: bold;
-    }
-
-    .modifier-btn {
-      cursor: pointer;
-      color: blue;
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
-
+    .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    h2 { margin-top: 40px; color: #d10000; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; font-size: 14px; }
+    th { background-color: #eee; }
+    .modifier-btn { cursor: pointer; color: blue; font-weight: bold; }
+    .hidden { display: none; }
     select, input[type="text"] {
-      font-size: 14px;
-      padding: 5px;
-      margin-top: 5px;
+      font-size: 14px; padding: 5px; margin-top: 5px;
     }
-
-    .solution-field {
-      margin-top: 5px;
-    }
+    .solution-field { margin-top: 5px; width: 100%; padding: 5px; }
   </style>
 </head>
 <body>
@@ -106,7 +39,9 @@
     <table id="table-anomalies">
       <thead>
         <tr>
-          <th>Date</th><th>Nom</th><th>Service</th><th>Référence</th><th>Écart</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th><th>Action</th>
+          <th>Date</th><th>Priorité</th><th>Nom</th><th>Domaine</th><th>Service</th><th>Référence</th>
+          <th>Type</th><th>Sujet</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th>
+          <th>Solution proposée</th><th>Action</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -116,7 +51,8 @@
     <table id="table-ameliorations">
       <thead>
         <tr>
-          <th>Date</th><th>Nom</th><th>Domaine</th><th>Service</th><th>Référence</th><th>Suggestion</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th><th>Action</th>
+          <th>Date</th><th>Priorité</th><th>Nom</th><th>Domaine</th><th>Service</th><th>Référence</th>
+          <th>Type</th><th>Suggestion</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th><th>Action</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -149,7 +85,7 @@
         const btn = document.createElement("span");
         btn.textContent = "✏️ Modifier";
         btn.className = "modifier-btn";
-        btn.onclick = () => demanderMotDePasse(type, index + 2, tr, idTable); // +2 pour ignorer l'entête + index base 1
+        btn.onclick = () => demanderMotDePasse(type, index + 2, tr, idTable); // ligne réelle = index + 2
         tdAction.appendChild(btn);
         tr.appendChild(tdAction);
         tbody.appendChild(tr);
@@ -179,41 +115,41 @@
         prenomSelect.appendChild(opt);
       });
 
-      const tdStatut = tr.children[tr.children.length - 3];
-      const tdPrenom = tr.children[tr.children.length - 2];
+      const tdStatut = tr.children[10];
+      const tdPrenom = tr.children[11];
+      const tdSolution = type === "anomalie" ? tr.children[12] : null;
+
       tdStatut.innerHTML = "";
       tdPrenom.innerHTML = "";
       tdStatut.appendChild(statutSelect);
       tdPrenom.appendChild(prenomSelect);
 
-      let tdSolution = null;
-      let inputSolution = null;
-      if (type === "anomalie") {
-        tdSolution = document.createElement("td");
-        inputSolution = document.createElement("input");
-        inputSolution.type = "text";
-        inputSolution.placeholder = "Solution proposée";
-        inputSolution.className = "solution-field hidden";
-        tdSolution.colSpan = 10;
-        tdSolution.appendChild(inputSolution);
-        tr.after(tdSolution);
+      let solutionInput = null;
+      if (type === "anomalie" && tdSolution) {
+        tdSolution.innerHTML = "";
+        solutionInput = document.createElement("input");
+        solutionInput.type = "text";
+        solutionInput.placeholder = "Solution proposée";
+        solutionInput.className = "solution-field hidden";
+        tdSolution.appendChild(solutionInput);
 
         statutSelect.onchange = () => {
           if (statutSelect.value === "Résolu") {
-            inputSolution.classList.remove("hidden");
+            solutionInput.classList.remove("hidden");
           } else {
-            inputSolution.classList.add("hidden");
+            solutionInput.classList.add("hidden");
           }
         };
       }
 
-      const tdAction = tr.children[tr.children.length - 1];
+      const tdAction = tr.children[13] || tr.children[12];
       tdAction.innerHTML = "";
       const btnSave = document.createElement("button");
       btnSave.textContent = "💾 Enregistrer";
       btnSave.onclick = () => {
         const newStatut = statutSelect.value;
         const prisPar = prenomSelect.value;
+        const solution = (solutionInput && !solutionInput.classList.contains("hidden")) ? solutionInput.value : "";
 
         fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
@@ -223,7 +159,8 @@
             sheet: type === "anomalie" ? "Anomalies" : "Ameliorations",
             row: row,
             statut: newStatut,
-            prisPar: prisPar
+            prisPar: prisPar,
+            solution: solution
           })
         }).then(() => {
           alert("✅ Modification enregistrée !");
