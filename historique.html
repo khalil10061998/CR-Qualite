@@ -38,9 +38,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
-    h1 {
-      margin: 0;
-    }
+    h1 { margin: 0; }
 
     .container {
       max-width: 1000px;
@@ -75,21 +73,24 @@
       font-weight: bold;
     }
 
-    .filter-container {
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .filter-container label {
+    .modifier-btn {
+      cursor: pointer;
+      color: blue;
       font-weight: bold;
     }
 
-    .filter-container select {
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    .hidden {
+      display: none;
+    }
+
+    select, input[type="text"] {
+      font-size: 14px;
+      padding: 5px;
+      margin-top: 5px;
+    }
+
+    .solution-field {
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -101,27 +102,11 @@
   </header>
 
   <div class="container">
-    <div class="filter-container">
-      <label for="filter-user">Filtrer par “Pris en charge par” :</label>
-      <select id="filter-user" onchange="filtrerParUtilisateur()">
-        <option value="">-- Tous --</option>
-        <!-- Options dynamiquement remplies -->
-      </select>
-    </div>
-
     <h2>Anomalies</h2>
     <table id="table-anomalies">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Nom</th>
-          <th>Service</th>
-          <th>Référence</th>
-          <th>Sujet</th>
-          <th>Cause</th>
-          <th>Urgence</th>
-          <th>Statut</th>
-          <th>Pris en charge par</th>
+          <th>Date</th><th>Nom</th><th>Service</th><th>Référence</th><th>Écart</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th><th>Action</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -131,24 +116,123 @@
     <table id="table-ameliorations">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Nom</th>
-          <th>Domaine</th>
-          <th>Service</th>
-          <th>Référence</th>
-          <th>Sujet</th>
-          <th>Cause</th>
-          <th>Urgence</th>
-          <th>Statut</th>
-          <th>Pris en charge par</th>
+          <th>Date</th><th>Nom</th><th>Domaine</th><th>Service</th><th>Référence</th><th>Suggestion</th><th>Cause</th><th>Urgence</th><th>Statut</th><th>Pris en charge par</th><th>Action</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
 
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7Bh17w0qgmPVzGBJW7MjbvfJgEBJG7U0wGh5mt5NvyGYpSPrId9Sdlm0RNALpiT5qkQ/exec";
+    const PERSONNES = ["Khalil", "Sabrina", "Elyesse", "Mehdi", "Céline", "Nadia", "Guillaume"];
+    const PASSWORD = "freepro123";
+
+    fetch(GOOGLE_SCRIPT_URL)
+      .then(res => res.json())
+      .then(data => {
+        afficherDonnees("anomalie", data.anomalies, "table-anomalies");
+        afficherDonnees("amelioration", data.ameliorations, "table-ameliorations");
+      });
+
+    function afficherDonnees(type, lignes, idTable) {
+      const tbody = document.querySelector(`#${idTable} tbody`);
+      lignes.slice(1).forEach((ligne, index) => {
+        const tr = document.createElement("tr");
+        ligne.forEach(cell => {
+          const td = document.createElement("td");
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+
+        const tdAction = document.createElement("td");
+        const btn = document.createElement("span");
+        btn.textContent = "✏️ Modifier";
+        btn.className = "modifier-btn";
+        btn.onclick = () => demanderMotDePasse(type, index + 2, tr, idTable); // +2 pour ignorer l'entête + index base 1
+        tdAction.appendChild(btn);
+        tr.appendChild(tdAction);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function demanderMotDePasse(type, row, tr, idTable) {
+      const ok = prompt("🔐 Entrez le mot de passe pour modifier :");
+      if (ok !== PASSWORD) {
+        alert("Mot de passe incorrect.");
+        return;
+      }
+
+      const statutSelect = document.createElement("select");
+      ["Nouveau", "Pris en charge", "Résolu"].forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s;
+        opt.textContent = s;
+        statutSelect.appendChild(opt);
+      });
+
+      const prenomSelect = document.createElement("select");
+      PERSONNES.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        prenomSelect.appendChild(opt);
+      });
+
+      const tdStatut = tr.children[tr.children.length - 3];
+      const tdPrenom = tr.children[tr.children.length - 2];
+      tdStatut.innerHTML = "";
+      tdPrenom.innerHTML = "";
+      tdStatut.appendChild(statutSelect);
+      tdPrenom.appendChild(prenomSelect);
+
+      let tdSolution = null;
+      let inputSolution = null;
+      if (type === "anomalie") {
+        tdSolution = document.createElement("td");
+        inputSolution = document.createElement("input");
+        inputSolution.type = "text";
+        inputSolution.placeholder = "Solution proposée";
+        inputSolution.className = "solution-field hidden";
+        tdSolution.colSpan = 10;
+        tdSolution.appendChild(inputSolution);
+        tr.after(tdSolution);
+
+        statutSelect.onchange = () => {
+          if (statutSelect.value === "Résolu") {
+            inputSolution.classList.remove("hidden");
+          } else {
+            inputSolution.classList.add("hidden");
+          }
+        };
+      }
+
+      const tdAction = tr.children[tr.children.length - 1];
+      tdAction.innerHTML = "";
+      const btnSave = document.createElement("button");
+      btnSave.textContent = "💾 Enregistrer";
+      btnSave.onclick = () => {
+        const newStatut = statutSelect.value;
+        const prisPar = prenomSelect.value;
+
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "update",
+            sheet: type === "anomalie" ? "Anomalies" : "Ameliorations",
+            row: row,
+            statut: newStatut,
+            prisPar: prisPar
+          })
+        }).then(() => {
+          alert("✅ Modification enregistrée !");
+          location.reload();
+        });
+      };
+      tdAction.appendChild(btnSave);
+    }
+  </script>
+
 </body>
 </html>
-
-
-
